@@ -26,12 +26,15 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Week1.HW01
+      Week1.Testing
+      Week1.HW01Tests
   other-modules:
       Paths_CIS1940
   autogen-modules:
       Paths_CIS1940
   hs-source-dirs:
-      src
+      src 
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
