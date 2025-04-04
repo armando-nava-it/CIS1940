@@ -5,35 +5,40 @@ module Week1.HW01 where
 
 -- Get the last digit from a number
 lastDigit :: Integer -> Integer
-lastDigit = undefined 
+lastDigit =  flip mod 10
 
 -- Drop the last digit from a number
 dropLastDigit :: Integer -> Integer
-dropLastDigit = undefined
+dropLastDigit x = (x - lastDigit x) `div` 10
 
 -- Exercise 2 -----------------------------------------
 
 toRevDigits :: Integer -> [Integer]
-toRevDigits = undefined
+toRevDigits x 
+    | x <= 0 = [] 
+    | otherwise = lastDigit x : toRevDigits(dropLastDigit x)
 
 -- Exercise 3 -----------------------------------------
 
 -- Double every second number in a list starting on the left.
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther = undefined
+doubleEveryOther [] = []
+doubleEveryOther (x:xs)
+ | even (length xs) = 2 * x:doubleEveryOther xs
+ | otherwise = x:doubleEveryOther xs
 
 -- Exercise 4 -----------------------------------------
 
 -- Calculate the sum of all the digits in every Integer.
 sumDigits :: [Integer] -> Integer
-sumDigits = undefined
+sumDigits xs = sum (foldr (++) [] (map toRevDigits xs))
 
 
 -- Exercise 5 -----------------------------------------
 
 -- Validate a credit card number using the above functions.
 luhn :: Integer -> Bool
-luhn = undefined
+luhn x = lastDigit x == lastDigit (sumDigits (doubleEveryOther (toRevDigits (dropLastDigit x))) * 9)
 
 -- Exercise 6 -----------------------------------------
 
@@ -42,4 +47,7 @@ type Peg = String
 type Move = (Peg, Peg)
 
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
-hanoi = undefined
+hanoi n a b c
+  | n < 1 = []
+  | n == 1 = [(a, c)]
+  | otherwise = hanoi (n - 1) a c b ++ hanoi 1 a b c ++ hanoi (n - 1) b a c
