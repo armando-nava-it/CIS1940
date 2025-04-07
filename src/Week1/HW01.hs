@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -Wall #-}
 module Week1.HW01 where
 
 -- Exercise 1 -----------------------------------------
@@ -9,36 +8,32 @@ lastDigit =  flip mod 10
 
 -- Drop the last digit from a number
 dropLastDigit :: Integer -> Integer
-dropLastDigit x = (x - lastDigit x) `div` 10
+dropLastDigit x = x `div` 10
 
 -- Exercise 2 -----------------------------------------
 
 toRevDigits :: Integer -> [Integer]
-toRevDigits x 
-    | x <= 0 = [] 
-    | otherwise = lastDigit x : toRevDigits(dropLastDigit x)
+toRevDigits x
+    | x <= 0 = []
+    | otherwise = lastDigit x : toRevDigits (dropLastDigit x)
 
 -- Exercise 3 -----------------------------------------
 
 -- Double every second number in a list starting on the left.
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther [] = []
-doubleEveryOther (x:xs)
- | even (length xs) = 2 * x:doubleEveryOther xs
- | otherwise = x:doubleEveryOther xs
+doubleEveryOther = zipWith (*) (cycle [1,2])
 
 -- Exercise 4 -----------------------------------------
 
 -- Calculate the sum of all the digits in every Integer.
 sumDigits :: [Integer] -> Integer
-sumDigits xs = sum (foldr (++) [] (map toRevDigits xs))
+sumDigits xs = sum (concatMap toRevDigits xs)
 
 
 -- Exercise 5 -----------------------------------------
 
--- Validate a credit card number using the above functions.
 luhn :: Integer -> Bool
-luhn x = lastDigit x == lastDigit (sumDigits (doubleEveryOther (toRevDigits (dropLastDigit x))) * 9)
+luhn x = lastDigit(sumDigits(doubleEveryOther (toRevDigits x))) == 0 
 
 -- Exercise 6 -----------------------------------------
 

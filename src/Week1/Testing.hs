@@ -1,4 +1,4 @@
-{-# OPTIONS_GHC -Wall #-}
+
 {-# LANGUAGE ExistentialQuantification #-}
 module Week1.Testing where
 
