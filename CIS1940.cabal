@@ -29,6 +29,8 @@ library
       Week1.HW01
       Week1.Testing
       Week1.HW01Tests
+      Week02.HW02
+      Week02.HW02Tests
   other-modules:
       Paths_CIS1940
   autogen-modules:
