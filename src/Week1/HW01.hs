@@ -4,7 +4,7 @@ module Week1.HW01 where
 
 -- Get the last digit from a number
 lastDigit :: Integer -> Integer
-lastDigit =  flip mod 10
+lastDigit = flip mod 10
 
 -- Drop the last digit from a number
 dropLastDigit :: Integer -> Integer
@@ -21,7 +21,7 @@ toRevDigits x
 
 -- Double every second number in a list starting on the left.
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther = zipWith (*) (cycle [1,2])
+doubleEveryOther = zipWith (*) (cycle [1, 2])
 
 -- Exercise 4 -----------------------------------------
 
@@ -29,11 +29,10 @@ doubleEveryOther = zipWith (*) (cycle [1,2])
 sumDigits :: [Integer] -> Integer
 sumDigits xs = sum (concatMap toRevDigits xs)
 
-
 -- Exercise 5 -----------------------------------------
 
 luhn :: Integer -> Bool
-luhn x = lastDigit(sumDigits(doubleEveryOther (toRevDigits x))) == 0 
+luhn x = lastDigit (sumDigits (doubleEveryOther (toRevDigits x))) == 0
 
 -- Exercise 6 -----------------------------------------
 
@@ -43,6 +42,6 @@ type Move = (Peg, Peg)
 
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
 hanoi n a b c
-  | n < 1 = []
-  | n == 1 = [(a, c)]
-  | otherwise = hanoi (n - 1) a c b ++ hanoi 1 a b c ++ hanoi (n - 1) b a c
+    | n < 1 = []
+    | n == 1 = [(a, c)]
+    | otherwise = hanoi (n - 1) a c b ++ hanoi 1 a b c ++ hanoi (n - 1) b a c
