@@ -2,9 +2,9 @@
 --
 -- Test cases for HW 02
 
-module Week02.HW02Tests (
-    module Week02.HW02Tests
-) where
+module Week02.HW02Tests
+    ( module Week02.HW02Tests
+    ) where
 
 import Week02.HW02
 import Week1.Testing
@@ -75,33 +75,68 @@ ex4Tests =
 -- Exercise 5 -----------------------------------------
 
 ex5Tests :: [Test]
-ex5Tests = [testF2 
-            "filterCodes"
-            filterCodes
-            [
-              (Move [Red, Red, Blue, Green] 1 1
-              ,[[Red, Blue, Yellow, Purple],[Red, Blue, Red, Purple]]
-              ,[[Red, Blue, Yellow, Purple]]
-              )
-            ]]
+ex5Tests =
+    [ testF2
+        "filterCodes"
+        filterCodes
+        [
+            ( Move [Red, Red, Blue, Green] 1 1
+            , [[Red, Blue, Yellow, Purple], [Red, Blue, Red, Purple]]
+            , [[Red, Blue, Yellow, Purple]]
+            )
+        ]
+    ]
 
 -- Exercise 6 -----------------------------------------
 
 ex6Tests :: [Test]
-ex6Tests = [ testF1
-            "allCodes"
-            allCodes
-            [
-              (2
-              ,
-              [ [Red, Red],     [Green, Red],   [Blue, Red],    [Yellow, Red],  [Orange, Red],  [Purple, Red],
-               [Red, Green],   [Green, Green], [Blue, Green],  [Yellow, Green],[Orange, Green],[Purple, Green],
-               [Red, Blue],    [Green, Blue],  [Blue, Blue],   [Yellow, Blue], [Orange, Blue], [Purple, Blue],
-               [Red, Yellow],  [Green, Yellow],[Blue, Yellow], [Yellow, Yellow],[Orange, Yellow],[Purple, Yellow],
-               [Red, Orange],  [Green, Orange],[Blue, Orange], [Yellow, Orange],[Orange, Orange],[Purple, Orange],
-               [Red, Purple],  [Green, Purple],[Blue, Purple], [Yellow, Purple],[Orange, Purple],[Purple, Purple] ]
-              )
-            ]]
+ex6Tests =
+    [ testF1
+        "allCodes"
+        allCodes
+        [
+            ( 2
+            ,
+                [ [Red, Red]
+                , [Green, Red]
+                , [Blue, Red]
+                , [Yellow, Red]
+                , [Orange, Red]
+                , [Purple, Red]
+                , [Red, Green]
+                , [Green, Green]
+                , [Blue, Green]
+                , [Yellow, Green]
+                , [Orange, Green]
+                , [Purple, Green]
+                , [Red, Blue]
+                , [Green, Blue]
+                , [Blue, Blue]
+                , [Yellow, Blue]
+                , [Orange, Blue]
+                , [Purple, Blue]
+                , [Red, Yellow]
+                , [Green, Yellow]
+                , [Blue, Yellow]
+                , [Yellow, Yellow]
+                , [Orange, Yellow]
+                , [Purple, Yellow]
+                , [Red, Orange]
+                , [Green, Orange]
+                , [Blue, Orange]
+                , [Yellow, Orange]
+                , [Orange, Orange]
+                , [Purple, Orange]
+                , [Red, Purple]
+                , [Green, Purple]
+                , [Blue, Purple]
+                , [Yellow, Purple]
+                , [Orange, Purple]
+                , [Purple, Purple]
+                ]
+            )
+        ]
+    ]
 
 -- Exercise 7 -----------------------------------------
 

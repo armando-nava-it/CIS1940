@@ -1,8 +1,13 @@
 {-# LANGUAGE ExistentialQuantification #-}
 
-module Week1.Testing (
-    module Week1.Testing
-) where
+module Week1.Testing
+    ( testF1
+    , testF2
+    , testF3
+    , Test (..)
+    , runTest
+    , runTests
+    ) where
 
 import Control.Arrow
 import Data.Maybe

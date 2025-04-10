@@ -1,6 +1,6 @@
-module Week1.HW01 (
-    module Week1.HW01
-) where
+module Week1.HW01
+    ( module Week1.HW01
+    ) where
 
 -- Exercise 1 -----------------------------------------
 

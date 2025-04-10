@@ -2,9 +2,9 @@
 --
 -- Test cases for HW 01
 
-module Week1.HW01Tests (
-    module Week1.HW01Tests
-) where
+module Week1.HW01Tests
+    ( module Week1.HW01Tests
+    ) where
 
 import Week1.HW01
 import Week1.Testing
