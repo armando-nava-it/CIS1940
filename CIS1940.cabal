@@ -33,7 +33,6 @@ library
       Week02.HW02Tests
   other-modules:
       Paths_CIS1940
-      Week1.Testing
   autogen-modules:
       Paths_CIS1940
   hs-source-dirs:

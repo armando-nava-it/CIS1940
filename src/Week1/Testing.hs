@@ -1,6 +1,8 @@
 {-# LANGUAGE ExistentialQuantification #-}
 
-module Week1.Testing where
+module Week1.Testing (
+    module Week1.Testing
+) where
 
 import Control.Arrow
 import Data.Maybe
@@ -25,11 +27,11 @@ runTests = catMaybes . map runTest
 
 -- Helpers
 
-testF1 :: (Eq b, Show a, Show b) => String -> (a -> b) -> [(a, b)] -> Test
+testF1 :: (Eq b, Show b) => String -> (a -> b) -> [(a, b)] -> Test
 testF1 s f l = Test s (uncurry (==)) $ map (first f) l
 
 testF2 ::
-    (Eq c, Show a, Show b, Show c) =>
+    (Eq c, Show c) =>
     String ->
     (a -> b -> c) ->
     [(a, b, c)] ->
@@ -37,7 +39,7 @@ testF2 ::
 testF2 s f l = Test s (uncurry (==)) $ map (\(x, y, z) -> (f x y, z)) l
 
 testF3 ::
-    (Eq d, Show a, Show b, Show c, Show d) =>
+    (Eq d, Show d) =>
     String ->
     (a -> b -> c -> d) ->
     [(a, b, c, d)] ->

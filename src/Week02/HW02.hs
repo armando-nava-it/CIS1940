@@ -1,4 +1,6 @@
-module Week02.HW02 where
+module Week02.HW02 (
+    module Week02.HW02
+) where
 
 -- Mastermind -----------------------------------------
 
@@ -67,8 +69,8 @@ filterCodes  m = filter (isConsistent m)
 
 allCodes :: Int -> [Code]
 allCodes n
-  | n <= 0    = []
-  | n == 1    = map (:[]) colors
+  | n < 0    = []
+  | n == 0    = [[]] 
   | otherwise = concatMap (\x -> map (:x) colors) (allCodes $ n-1)
 
 -- Exercise 7 -----------------------------------------
@@ -78,9 +80,11 @@ solve code = guesses $ allCodes $ length code
   where
     guesses :: [Code] -> [Move]
     guesses [] = []
-    guesses [_] = []
-    guesses codes@(guess:_) = move : guesses (filterCodes move codes)
-      where move = getMove code guess
+    guesses (guess:rest)
+                        | guess == code = [getMove code guess]
+                        | otherwise     = move : guesses (filterCodes move rest)
+                        where
+                            move = getMove code guess
 
 -- Bonus ----------------------------------------------
 
