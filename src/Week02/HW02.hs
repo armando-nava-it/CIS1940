@@ -1,5 +1,16 @@
 module Week02.HW02
-    ( module Week02.HW02
+    ( Peg (..)
+    , Move (..)
+    , colors
+    , exactMatches
+    , countColors
+    , matches
+    , getMove
+    , isConsistent
+    , filterCodes
+    , allCodes
+    , solve
+    , fiveGuess
     ) where
 
 -- Mastermind -----------------------------------------
@@ -80,9 +91,7 @@ solve code = guesses $ allCodes $ length code
   where
     guesses :: [Code] -> [Move]
     guesses [] = []
-    guesses (guess : rest)
-        | guess == code = [getMove code guess]
-        | otherwise = move : guesses (filterCodes move rest)
+    guesses (guess : rest) = move : guesses (filterCodes move rest)
       where
         move = getMove code guess
 

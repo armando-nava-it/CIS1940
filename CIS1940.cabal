@@ -28,9 +28,7 @@ library
       Lib
       Week1.HW01
       Week1.Testing
-      Week1.HW01Tests
       Week02.HW02
-      Week02.HW02Tests
   other-modules:
       Paths_CIS1940
   autogen-modules:
@@ -61,6 +59,8 @@ test-suite CIS1940-test
   main-is: Spec.hs
   other-modules:
       Paths_CIS1940
+      HW01Tests
+      HW02Tests
   autogen-modules:
       Paths_CIS1940
   hs-source-dirs:
