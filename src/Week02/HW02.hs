@@ -35,7 +35,7 @@ colors = [Red, Green, Blue, Yellow, Orange, Purple]
 
 -- Get the number of exact matches between the actual code and the guess
 exactMatches :: Code -> Code -> Int
-exactMatches a b = length . filter (== True) $ zipWith (==) a b
+exactMatches a b = length . filter id $ zipWith (==) a b
 
 -- Exercise 2 -----------------------------------------
 
