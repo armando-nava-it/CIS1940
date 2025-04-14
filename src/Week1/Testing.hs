@@ -4,6 +4,7 @@ module Week1.Testing
     ( testF1
     , testF2
     , testF3
+    , testF4
     , Test (..)
     , runTest
     , runTests
@@ -50,3 +51,11 @@ testF3 ::
     [(a, b, c, d)] ->
     Test
 testF3 s f l = Test s (uncurry (==)) $ map (\(w, x, y, z) -> (f w x y, z)) l
+
+testF4 ::
+    (Eq e, Show e) =>
+    String ->
+    (a -> b -> c -> d -> e) ->
+    [(a, b, c, d, e)] ->
+    Test
+testF4 s f l = Test s (uncurry (==)) $ map (\(a, b, c, d, e) -> (f a b c d, e)) l
