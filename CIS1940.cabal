@@ -30,6 +30,7 @@ library
       Week1.Testing
       Week02.HW02
       Week03.HW03
+      Week04.HW04
   other-modules:
       Paths_CIS1940
   autogen-modules:
