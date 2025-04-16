@@ -1,5 +1,7 @@
+{-# LANGUAGE InstanceSigs #-}
 {-# OPTIONS_GHC -Wall #-}
-module Week04.HW04 where
+
+module Week04.HW04 (Poly (..), applyP, deriv, nderiv, x) where
 
 newtype Poly a = P [a]
 
@@ -10,51 +12,87 @@ x = P [0, 1]
 
 -- Exercise 2 ----------------------------------------
 
-instance (Num a, Eq a) => Eq (Poly a) where
-        (P xs) == (P ys) = trim xs == trim ys 
-         where 
-            trim = dropWhile (== 0) . reverse
+instance (Eq a, Num a) => Eq (Poly a) where
+    (P xs) == (P ys) = trim xs == trim ys
+      where
+        trim = dropWhile (== 0) . reverse
 
 -- Exercise 3 -----------------------------------------
 
-instance (Num a, Eq a, Show a) => Show (Poly a) where
-    show = undefined
+instance (Eq a, Num a, Show a) => Show (Poly a) where
+    show (P coeffs) =
+        let terms = reverse $ zip [0 :: Int ..] coeffs
+            shownTerms = map showTerm $ filter (\(_, c) -> c /= 0) terms
+         in if null shownTerms
+                then "0"
+                else unwords $ insertPluses shownTerms
+      where
+        showTerm (0, c) = show c
+        showTerm (1, c)
+            | c == 1 = "x"
+            | otherwise = show c ++ "x"
+        showTerm (e, c)
+            | c == 1 = "x^" ++ show e
+            | otherwise = show c ++ "x^" ++ show e
+
+        insertPluses [] = []
+        insertPluses (t : ts) = t : map ("+ " ++) ts
 
 -- Exercise 4 -----------------------------------------
 
 plus :: Num a => Poly a -> Poly a -> Poly a
-plus = undefined
+plus (P xs) (P ys) = P (addLists xs ys)
+  where
+    addLists (a : as) (b : bs) = (a + b) : addLists as bs
+    addLists [] bs = bs
+    addLists as [] = as
 
 -- Exercise 5 -----------------------------------------
 
 times :: Num a => Poly a -> Poly a -> Poly a
-times = undefined
+times (P []) _ = P []
+times _ (P []) = P []
+times (P xs) (P ys) = foldr plus (P []) shiftedProducts
+  where
+    shiftedProducts = [shift i (scale c ys) | (i, c) <- zip [0 ..] xs]
+
+    scale c = map (c *)
+    shift i cs = P (replicate i 0 ++ cs)
 
 -- Exercise 6 -----------------------------------------
 
 instance Num a => Num (Poly a) where
+    (+) :: Poly a -> Poly a -> Poly a
     (+) = plus
+    (*) :: Poly a -> Poly a -> Poly a
     (*) = times
-    negate      = undefined
-    fromInteger = undefined
+    negate :: Poly a -> Poly a
+    negate (P coeffs) = P (map negate coeffs)
+    fromInteger :: Integer -> Poly a
+    fromInteger n = P [fromInteger n]
+
     -- No meaningful definitions exist
-    abs    = undefined
+    abs = undefined
     signum = undefined
 
 -- Exercise 7 -----------------------------------------
 
 applyP :: Num a => Poly a -> a -> a
-applyP = undefined
+applyP (P coeffs) x1 = sum $ zipWith (\a i -> a * x1 ^ i) coeffs [0 :: Int ..]
 
 -- Exercise 8 -----------------------------------------
 
 class Num a => Differentiable a where
-    deriv  :: a -> a
+    deriv :: a -> a
     nderiv :: Int -> a -> a
-    nderiv = undefined
+    nderiv n f
+        | n <= 0 = f
+        | otherwise = deriv (nderiv (n - 1) f)
 
 -- Exercise 9 -----------------------------------------
 
-instance Num a => Differentiable (Poly a) where
-    deriv = undefined
-
+instance (Enum a, Num a) => Differentiable (Poly a) where
+    deriv :: Poly a -> Poly a
+    deriv (P coeffs) =
+        let derivCoeffs = zipWith (*) (map fromIntegral [1 :: Int ..]) (tail coeffs)
+         in P derivCoeffs

@@ -1,8 +1,10 @@
 import System.Exit
+import Test.Hspec
 
 import qualified HW01Tests as W1
 import qualified HW02Tests as W2
 import qualified HW03Tests as W3
+import qualified HW04Tests as W4
 import Week1.Testing (runTests)
 
 main :: IO ()
@@ -11,3 +13,6 @@ main = do
     case result of
         [] -> putStrLn "OK, all tests passed"
         failures -> die $ show failures
+
+    hspec $ do
+        W4.allTests
