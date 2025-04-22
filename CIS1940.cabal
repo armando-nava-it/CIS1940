@@ -30,6 +30,7 @@ library
       Week1.Testing
       Week02.HW02
       Week03.HW03
+      Week04.HW04
   other-modules:
       Paths_CIS1940
   autogen-modules:
@@ -63,6 +64,7 @@ test-suite CIS1940-test
       HW01Tests
       HW02Tests
       HW03Tests
+      HW04Tests
   autogen-modules:
       Paths_CIS1940
   hs-source-dirs:
@@ -71,4 +73,6 @@ test-suite CIS1940-test
   build-depends:
       CIS1940
     , base >=4.7 && <5
+    , hspec
+    , QuickCheck
   default-language: Haskell2010
