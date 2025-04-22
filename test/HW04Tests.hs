@@ -1,40 +1,40 @@
-{-# LANGUAGE NondecreasingIndentation #-}
-
 module HW04Tests (allTests) where
 
 import Test.Hspec
 
 import Week04.HW04
 
+p :: [Int] -> Poly Int
+p = P
 allTests :: Spec
 allTests = describe "Week04" $ do
     describe "\nPoly Eq Instance" $ do
         it "Identical Poly " $ do
-            P ([1, 2] :: [Int]) `shouldBe` P ([1, 2, 0] :: [Int])
+            p [1, 2] `shouldBe` p [1, 2, 0]
         it "Non Identical Poly" $ do
-            P ([1, 2] :: [Int]) `shouldNotBe` P ([0, 1, 2] :: [Int])
+            p [1, 2] `shouldNotBe` p [0, 1, 2]
 
     describe "\nPoly Show Instance" $ do
-        it "show (P ([0, 0, 0] :: [Int])) == 0" $ do
-            show (P ([0, 0, 0] :: [Int])) `shouldBe` "0"
-        it "show (P ([1, 0, 0, 2] :: [Int])) == '2x^3 + 1'" $ do
-            show (P ([1, 0, 0, 2] :: [Int])) `shouldBe` "2x^3 + 1"
-        it "show (P ([0, 1] :: [Int])) == 'x'" $ do
-            show (P ([0, 1] :: [Int])) `shouldBe` "x"
+        it "show (p [0, 0, 0] )) == 0" $ do
+            show (p [0, 0, 0]) `shouldBe` "0"
+        it "show (p [1, 0, 0, 2] )) == '2x^3 + 1'" $ do
+            show (p [1, 0, 0, 2]) `shouldBe` "2x^3 + 1"
+        it "show (p [0, 1] )) == 'x'" $ do
+            show (p [0, 1]) `shouldBe` "x"
 
     describe "\nPoly addition" $ do
-        it "P [5, 0, 1] + P [1, 1, 2] == P [6, 1, 3]" $ do
-            P ([5, 0, 1] :: [Int]) + P ([1, 1, 2] :: [Int]) `shouldBe` P ([6, 1, 3] :: [Int])
-        it "P [1, 0, 1] + P [1, 1] == P [2, 1, 1]" $ do
-            P ([1, 0, 1] :: [Int]) + P ([1, 1] :: [Int]) `shouldBe` P ([2, 1, 1] :: [Int])
+        it "p [5, 0, 1] + p [1, 1, 2] == p [6, 1, 3]" $ do
+            p [5, 0, 1] + p [1, 1, 2] `shouldBe` p [6, 1, 3]
+        it "p [1, 0, 1] + p [1, 1] == p [2, 1, 1]" $ do
+            p [1, 0, 1] + p [1, 1] `shouldBe` p [2, 1, 1]
 
     describe "\nPoly multiplication" $ do
-        it "P [1, 1, 1] * P [2, 2] == P [2, 4, 4, 2]" $ do
-            P ([1, 1, 1] :: [Int]) * P ([2, 2] :: [Int]) `shouldBe` P ([2, 4, 4, 2] :: [Int])
+        it "p [1, 1, 1] * p [2, 2] == p [2, 4, 4, 2]" $ do
+            p [1, 1, 1] * p [2, 2] `shouldBe` p [2, 4, 4, 2]
 
     describe "\nPoly subtraction" $ do
-        it "P [1, 1, 1] - P [2, 2] == P [-1, -1, 1]" $ do
-            P ([1, 1, 1] :: [Int]) - P ([2, 2] :: [Int]) `shouldBe` P ([-1, -1, 1] :: [Int])
+        it "p [1, 1, 1] - p [2, 2] == p [-1, -1, 1]" $ do
+            p [1, 1, 1] - p [2, 2] `shouldBe` p [-1, -1, 1]
         it "(1 + x + x^2) - (2 + 2x) == (x^2 + (-x) + (-1))" $ do
             ((x ^ (2 :: Int) :: Poly Int) + x + 1) - (2 * x + 2) `shouldBe` ((x ^ (2 :: Int) :: Poly Int) + (-x) + (-1))
 
@@ -48,4 +48,4 @@ allTests = describe "Week04" $ do
         it "deriv (x^2 + 3*x + 5) == 2*x + 3" $ do
             deriv ((x ^ (2 :: Int) :: Poly Int) + 3 * x + 5) `shouldBe` 2 * x + 3
         it "nderiv 2 (x^2 + 3*x + 5 :: Poly Int) == 2" $ do
-            nderiv 2 ((x ^ (2 :: Int) :: Poly Int) + 3 * x + 5 :: Poly Int) `shouldBe` 2
+            nderiv 2 ((x ^ (2 :: Int) :: Poly Int) + 3 * x + 5) `shouldBe` 2

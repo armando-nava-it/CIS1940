@@ -1,7 +1,8 @@
 {-# LANGUAGE InstanceSigs #-}
-{-# OPTIONS_GHC -Wall #-}
 
 module Week04.HW04 (Poly (..), applyP, deriv, nderiv, x) where
+
+import Data.List (dropWhileEnd, intercalate)
 
 newtype Poly a = P [a]
 
@@ -15,7 +16,7 @@ x = P [0, 1]
 instance (Eq a, Num a) => Eq (Poly a) where
     (P xs) == (P ys) = trim xs == trim ys
       where
-        trim = dropWhile (== 0) . reverse
+        trim = dropWhileEnd (== 0)
 
 -- Exercise 3 -----------------------------------------
 
@@ -25,7 +26,7 @@ instance (Eq a, Num a, Show a) => Show (Poly a) where
             shownTerms = map showTerm $ filter (\(_, c) -> c /= 0) terms
          in if null shownTerms
                 then "0"
-                else unwords $ insertPluses shownTerms
+                else intercalate " + " shownTerms
       where
         showTerm (0, c) = show c
         showTerm (1, c)
@@ -34,9 +35,6 @@ instance (Eq a, Num a, Show a) => Show (Poly a) where
         showTerm (e, c)
             | c == 1 = "x^" ++ show e
             | otherwise = show c ++ "x^" ++ show e
-
-        insertPluses [] = []
-        insertPluses (t : ts) = t : map ("+ " ++) ts
 
 -- Exercise 4 -----------------------------------------
 
@@ -93,6 +91,7 @@ class Num a => Differentiable a where
 
 instance (Enum a, Num a) => Differentiable (Poly a) where
     deriv :: Poly a -> Poly a
-    deriv (P coeffs) =
-        let derivCoeffs = zipWith (*) (map fromIntegral [1 :: Int ..]) (tail coeffs)
+    deriv (P []) = P []
+    deriv (P (_ : coeffs)) =
+        let derivCoeffs = zipWith (*) (map fromIntegral [1 :: Int ..]) coeffs
          in P derivCoeffs
