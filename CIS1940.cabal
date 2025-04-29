@@ -32,6 +32,7 @@ library
       Week03.HW03
       Week04.HW04
       Week05.HW05
+      Week06.HW06
       Week05.Parser
   other-modules:
       Paths_CIS1940
@@ -71,6 +72,7 @@ test-suite CIS1940-test
       HW03Tests
       HW04Tests
       HW05Tests
+      HW06Tests
   autogen-modules:
       Paths_CIS1940
   hs-source-dirs:
