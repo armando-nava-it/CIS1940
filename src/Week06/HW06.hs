@@ -1,9 +1,25 @@
+{-# LANGUAGE BangPatterns #-}
 {-# OPTIONS_GHC -Wall #-}
 
-module Week06.HW06 (fib, fibs1) where
+module Week06.HW06
+    ( fib
+    , fibs1
+    , fibs2
+    , sTake
+    , sRepeat
+    , sIterate
+    , sInterleave
+    , nats
+    , ruler
+    , rand
+    , fastFib
+    , minMax
+    , minMaxSlow
+    , minMax'
+    , main
+    ) where
 
-import Data.Functor
-import Data.List
+import Data.List (foldl', intercalate)
 
 -- Exercise 1 -----------------------------------------
 
@@ -35,53 +51,72 @@ instance Show a => Show (Stream a) where
             ++ ",..."
 
 streamToList :: Stream a -> [a]
-streamToList = undefined
+streamToList (Cons x xs) = x : streamToList xs
 
 -- Exercise 4 -----------------------------------------
 
 instance Functor Stream where
-    fmap = undefined
+    fmap f (Cons x xs) = Cons (f x) (fmap f xs)
 
 -- Exercise 5 -----------------------------------------
 
 sRepeat :: a -> Stream a
-sRepeat = undefined
+sRepeat a = Cons a (sRepeat a)
 
 sIterate :: (a -> a) -> a -> Stream a
-sIterate = undefined
+sIterate f x = Cons x (sIterate f (f x))
 
 sInterleave :: Stream a -> Stream a -> Stream a
-sInterleave (Cons _ _) _ = undefined
+sInterleave (Cons x1 xs1) s2 = Cons x1 (sInterleave s2 xs1)
 
 sTake :: Int -> Stream a -> [a]
-sTake = undefined
+sTake 0 _ = []
+sTake n (Cons x xs) = x : sTake (n - 1) xs
 
 -- Exercise 6 -----------------------------------------
 
 nats :: Stream Integer
-nats = undefined
+nats = sIterate (1 +) 1
 
 ruler :: Stream Integer
-ruler = undefined
+ruler = buildRuler 0
+  where
+    buildRuler :: Integer -> Stream Integer
+    buildRuler n = sInterleave (sRepeat n) (buildRuler (n + 1))
 
 -- Exercise 7 -----------------------------------------
 
 -- | Implementation of C rand
 rand :: Int -> Stream Int
-rand = undefined
+rand = sIterate next
+  where
+    next x = (1103515245 * x + 12345) `mod` 2147483648
 
 -- Exercise 8 -----------------------------------------
 
-{- Total Memory in use: ??? MB -}
+{- Total Memory in use: 83 MiB total memory in use (0 MiB lost due to fragmentation) -}
 minMaxSlow :: [Int] -> Maybe (Int, Int)
 minMaxSlow [] = Nothing -- no min or max if there are no elements
 minMaxSlow xs = Just (minimum xs, maximum xs)
 
 -- Exercise 9 -----------------------------------------
 
-{- Total Memory in use: ??? MB -}
+{- Total Memory in use: 6 MiB total memory in use (0 MiB lost due to fragmentation) -}
+
 minMax :: [Int] -> Maybe (Int, Int)
-minMax = undefined
+minMax [] = Nothing
+minMax (x : xs) = Just (foldl' step (x, x) xs)
+  where
+    step (!mi, !ma) y = (min mi y, max ma y)
+
+{- Total Memory in use: 6 MiB total memory in use (0 MiB lost due to fragmentation) -}
+
+minMax' :: [Int] -> Maybe (Int, Int)
+minMax' [] = Nothing
+minMax' (x : xs) = Just $ helper xs x x
+  where
+    helper [] mn mx = (mn, mx)
+    helper (y : ys) !mn !mx = helper ys (min y mn) (max y mx)
 
 main :: IO ()
 main = print $ minMaxSlow $ sTake 1000000 $ rand 7666532
