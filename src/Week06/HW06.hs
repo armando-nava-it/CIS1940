@@ -1,5 +1,4 @@
 {-# LANGUAGE BangPatterns #-}
-{-# OPTIONS_GHC -Wall #-}
 
 module Week06.HW06
     ( fib
@@ -70,8 +69,9 @@ sInterleave :: Stream a -> Stream a -> Stream a
 sInterleave (Cons x1 xs1) s2 = Cons x1 (sInterleave s2 xs1)
 
 sTake :: Int -> Stream a -> [a]
-sTake 0 _ = []
-sTake n (Cons x xs) = x : sTake (n - 1) xs
+sTake n (Cons x xs)
+    | n < 1 = []
+    | otherwise = x : sTake (n - 1) xs
 
 -- Exercise 6 -----------------------------------------
 
