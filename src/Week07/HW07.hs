@@ -57,6 +57,7 @@ mapM'' f (x:xs) = do
   ys <- mapM'' f xs
   return $ y:ys
 
+-- Alternative solution with explicit use of bind
 -- f x >>= \y -> mapM'' f xs >>= \ys -> return $ y:ys  
 
 getElts :: [Int] -> Vector a -> Maybe [a]
@@ -74,6 +75,7 @@ randomElt v = getRandomR (0, V.length v - 1) <&> (v !?)
 randomVec :: Random a => Int -> Rnd (Vector a)
 randomVec n = Week07.HW07.liftM V.fromList $ replicateM n getRandom
 
+-- Alternative solution using do notation
 -- randomVec n = do
 --   xs <- replicateM n getRandom
 --   return $ V.fromList xs
@@ -81,6 +83,7 @@ randomVec n = Week07.HW07.liftM V.fromList $ replicateM n getRandom
 randomVecR :: Random a => Int -> (a, a) -> Rnd (Vector a)
 randomVecR n r = Week07.HW07.liftM V.fromList $ replicateM n $ getRandomR r
 
+-- Alternative solution using do notation
 -- randomVecR n range = do
 --   xs <- replicateM n (getRandomR r)
 --   return $ V.fromList xs
@@ -128,7 +131,7 @@ qsort vec
           (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
       in qsort less V.++ V.singleton pivot V.++ qsort greaterOrEqual
 
-
+-- Alternative solution using e Monad Comprehension
 -- qsort :: Ord a => Vector a -> Vector a
 -- qsort vec
 --   | null vec = vec
@@ -137,16 +140,7 @@ qsort vec
 --       x = V.head vec
 --       xs = V.tail vec
 
-
 -- Exercise 8 -----------------------------------------
-
--- qsortR :: Ord a => Vector a -> Rnd (Vector a)
--- qsortR v
---   | V.null v = return V.empty
---   | otherwise = parts >>= mergeSort
---   where
---     parts = getRandomR (0, V.length v - 1) >>= return . partitionAt v
---     mergeSort (b, p, t) = liftM2 (<>) (qsortR b) (fmap (cons p) (qsortR t))
 
 qsortR :: Ord a => Vector a -> Rnd (Vector a)
 qsortR vec
@@ -159,6 +153,17 @@ qsortR vec
       rightSorted <- qsortR greaterOrEqual
       return $ leftSorted V.++ V.singleton pivot V.++ rightSorted
       
+
+-- Alternative solution with explicit use of bind 
+-- qsortR :: Ord a => Vector a -> Rnd (Vector a)
+-- qsortR v
+--   | V.null v = return V.empty
+--   | otherwise = parts >>= mergeSort
+--   where
+--     parts = getRandomR (0, V.length v - 1) >>= return . partitionAt v
+--     mergeSort (b, p, t) = liftM2 (<>) (qsortR b) (fmap (cons p) (qsortR t))
+
+
 -- Exercise 9 -----------------------------------------
 
 -- Selection
@@ -175,6 +180,7 @@ select i vec
         EQ -> return (Just pivot)
         GT -> select (i - lenLess - 1) greaterOrEqual
 
+-- Alternative solution with explicit use of bind 
 -- select :: Ord a => Int -> Vector a -> Rnd (Maybe a)
 -- select i v
 --   | V.null v = return Nothing
