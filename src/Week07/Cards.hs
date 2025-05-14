@@ -1,4 +1,4 @@
-module Week07.Cards ( Deck(..)
+module Week07.Cards ( Deck
              , Card(..)
              , Suit(..)
              , Label(..)

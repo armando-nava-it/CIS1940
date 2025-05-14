@@ -8,15 +8,29 @@ module Week07.HW07
     , Week07.HW07.mapM
     , mapM''
     , getElts
+    , randomElt
+    , randomVec
+    , randomVecR
+    , shuffle
+    , partitionAt
+    , qsort
+    , quicksort
+    , qsortR
+    , select
+    , allCards
+    , newDeck
+    , nextCard
+    , getCards
+    , repl
+    , main
     ) where
 
 import Control.Monad hiding (liftM, mapM)
 import Control.Monad.Random
 import Data.Functor
 import Data.Monoid
-import Data.Vector (Vector, cons, (!), (!?), (//))
+import Data.Vector (Vector, (!), (!?), (//))
 import qualified Data.Vector as V
-import System.Random
 import Week07.Cards
 import Prelude hiding (mapM)
 
@@ -60,19 +74,42 @@ randomElt v = getRandomR (0, V.length v - 1) <&> (v !?)
 randomVec :: Random a => Int -> Rnd (Vector a)
 randomVec n = Week07.HW07.liftM V.fromList $ replicateM n getRandom
 
+-- randomVec n = do
+--   xs <- replicateM n getRandom
+--   return $ V.fromList xs
+
 randomVecR :: Random a => Int -> (a, a) -> Rnd (Vector a)
 randomVecR n r = Week07.HW07.liftM V.fromList $ replicateM n $ getRandomR r
--- >>> randomVecR 3 (1,4)
+
+-- randomVecR n range = do
+--   xs <- replicateM n (getRandomR r)
+--   return $ V.fromList xs
 
 -- Exercise 5 -----------------------------------------
 
 shuffle :: Vector a -> Rnd (Vector a)
-shuffle = undefined
+shuffle vec = do
+    let n = V.length vec
+    swaps <- sequence [ do
+                          j <- getRandomR (0, i)
+                          return (i, j)
+                      | i <- [n-1, n-2 .. 1]
+                      ]
+    return (applySwaps vec swaps)
+
+
+applySwaps :: Vector a -> [(Int, Int)] -> Vector a
+applySwaps = foldl (\v (i, j) -> v // [(i, v ! j), (j, v ! i)])
 
 -- Exercise 6 -----------------------------------------
 
 partitionAt :: Ord a => Vector a -> Int -> (Vector a, a, Vector a)
-partitionAt = undefined
+partitionAt vec idx =
+    let pivot = vec ! idx
+        withoutPivot = V.ifilter (\i _ -> i /= idx) vec
+        less = V.filter (< pivot) withoutPivot
+        greaterOrEqual = V.filter (>= pivot) withoutPivot
+    in (less, pivot, greaterOrEqual)
 
 -- Exercise 7 -----------------------------------------
 
@@ -84,36 +121,95 @@ quicksort (x : xs) =
         <> (x : quicksort [ y | y <- xs, y >= x])
 
 qsort :: Ord a => Vector a -> Vector a
-qsort = undefined
+qsort vec
+  | V.null vec = V.empty
+  | otherwise  =
+      let pivotIndex = 0
+          (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
+      in qsort less V.++ V.singleton pivot V.++ qsort greaterOrEqual
+
+
+-- qsort :: Ord a => Vector a -> Vector a
+-- qsort vec
+--   | null vec = vec
+--   | otherwise = qsort [ y | y <- xs, y < x ] <> cons x (qsort [ y | y <- xs, y >= x ])
+--     where
+--       x = V.head vec
+--       xs = V.tail vec
+
 
 -- Exercise 8 -----------------------------------------
 
-qsortR :: Ord a => Vector a -> Rnd (Vector a)
-qsortR = undefined
+-- qsortR :: Ord a => Vector a -> Rnd (Vector a)
+-- qsortR v
+--   | V.null v = return V.empty
+--   | otherwise = parts >>= mergeSort
+--   where
+--     parts = getRandomR (0, V.length v - 1) >>= return . partitionAt v
+--     mergeSort (b, p, t) = liftM2 (<>) (qsortR b) (fmap (cons p) (qsortR t))
 
+qsortR :: Ord a => Vector a -> Rnd (Vector a)
+qsortR vec
+  | V.null vec = return V.empty
+  | otherwise = do
+      let n = V.length vec
+      pivotIndex <-  getRandomR (0, n - 1)
+      let (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
+      leftSorted  <- qsortR less
+      rightSorted <- qsortR greaterOrEqual
+      return $ leftSorted V.++ V.singleton pivot V.++ rightSorted
+      
 -- Exercise 9 -----------------------------------------
 
 -- Selection
 select :: Ord a => Int -> Vector a -> Rnd (Maybe a)
-select = undefined
+select i vec
+  | i < 0 || i >= V.length vec = return Nothing
+  | otherwise = do
+      let n = V.length vec
+      pivotIndex <- getRandomR (0, n - 1)
+      let (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
+          lenLess = V.length less
+      case compare i lenLess of
+        LT -> select i less
+        EQ -> return (Just pivot)
+        GT -> select (i - lenLess - 1) greaterOrEqual
+
+-- select :: Ord a => Int -> Vector a -> Rnd (Maybe a)
+-- select i v
+--   | V.null v = return Nothing
+--   | otherwise = liftM (partitionAt v) rpi >>= helper
+--   where
+--     rpi = getRandomR (0, V.length v - 1)
+--     helper (bottom, pivot, top)
+--       | i < blen = select i bottom
+--       | i > blen = select (i - blen - 1) top
+--       | otherwise = return $ Just pivot
+--       where blen = V.length bottom
 
 -- Exercise 10 ----------------------------------------
 
 allCards :: Deck
-allCards = undefined
+allCards = [ Card l s | s <- suits, l <- labels ]
 
 newDeck :: Rnd Deck
-newDeck = undefined
+newDeck = shuffle allCards 
 
 -- Exercise 11 ----------------------------------------
 
 nextCard :: Deck -> Maybe (Card, Deck)
-nextCard = undefined
+nextCard d
+  | V.null d = Nothing
+  | otherwise = return (V.head d, V.tail d)
 
 -- Exercise 12 ----------------------------------------
 
 getCards :: Int -> Deck -> Maybe ([Card], Deck)
-getCards = undefined
+getCards n deck = go n ([], deck)
+  where
+    go :: Int -> ([Card], Deck) -> Maybe ([Card], Deck)
+    go 0 ret = return ret
+    go m (crds, d) = nextCard d >>= \(crd, r) -> go (m-1) (crd:crds, r)
 
 -- Exercise 13 ----------------------------------------
 
