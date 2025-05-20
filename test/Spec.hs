@@ -7,6 +7,7 @@ import qualified HW03Tests as W3
 import qualified HW04Tests as W4
 import qualified HW05Tests as W5
 import qualified HW06Tests as W6
+import qualified HW07Tests as W7
 import Week1.Testing (runTests)
 
 main :: IO ()
@@ -20,3 +21,4 @@ main = do
         W4.allTests
         W5.allTests
         W6.allTests
+        W7.allTests
