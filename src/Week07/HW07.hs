@@ -31,8 +31,9 @@ import Data.Functor
 import Data.Monoid
 import Data.Vector (Vector, (!), (!?), (//))
 import qualified Data.Vector as V
-import Week07.Cards
 import Prelude hiding (mapM)
+
+import Week07.Cards
 
 -- Exercise 1 -----------------------------------------
 
@@ -52,16 +53,16 @@ mapM f l = sequence $ map f l
 
 mapM'' :: Monad m => (a -> m b) -> [a] -> m [b]
 mapM'' _ [] = return []
-mapM'' f (x:xs) = do
-  y <- f x
-  ys <- mapM'' f xs
-  return $ y:ys
+mapM'' f (x : xs) = do
+    y <- f x
+    ys <- mapM'' f xs
+    return $ y : ys
 
 -- Alternative solution with explicit use of bind
--- f x >>= \y -> mapM'' f xs >>= \ys -> return $ y:ys  
+-- f x >>= \y -> mapM'' f xs >>= \ys -> return $ y:ys
 
 getElts :: [Int] -> Vector a -> Maybe [a]
-getElts l v = Week07.HW07.mapM (v!?) l
+getElts l v = Week07.HW07.mapM (v !?) l
 
 -- Exercise 3 -----------------------------------------
 
@@ -93,13 +94,14 @@ randomVecR n r = Week07.HW07.liftM V.fromList $ replicateM n $ getRandomR r
 shuffle :: Vector a -> Rnd (Vector a)
 shuffle vec = do
     let n = V.length vec
-    swaps <- sequence [ do
-                          j <- getRandomR (0, i)
-                          return (i, j)
-                      | i <- [n-1, n-2 .. 1]
-                      ]
+    swaps <-
+        sequence
+            [ do
+                j <- getRandomR (0, i)
+                return (i, j)
+            | i <- [n - 1, n - 2 .. 1]
+            ]
     return (applySwaps vec swaps)
-
 
 applySwaps :: Vector a -> [(Int, Int)] -> Vector a
 applySwaps = foldl (\v (i, j) -> v // [(i, v ! j), (j, v ! i)])
@@ -112,7 +114,7 @@ partitionAt vec idx =
         withoutPivot = V.ifilter (\i _ -> i /= idx) vec
         less = V.filter (< pivot) withoutPivot
         greaterOrEqual = V.filter (>= pivot) withoutPivot
-    in (less, pivot, greaterOrEqual)
+     in (less, pivot, greaterOrEqual)
 
 -- Exercise 7 -----------------------------------------
 
@@ -120,16 +122,16 @@ partitionAt vec idx =
 quicksort :: Ord a => [a] -> [a]
 quicksort [] = []
 quicksort (x : xs) =
-    quicksort [ y | y <- xs, y < x]
-        <> (x : quicksort [ y | y <- xs, y >= x])
+    quicksort [y | y <- xs, y < x]
+        <> (x : quicksort [y | y <- xs, y >= x])
 
 qsort :: Ord a => Vector a -> Vector a
 qsort vec
-  | V.null vec = V.empty
-  | otherwise  =
-      let pivotIndex = 0
-          (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
-      in qsort less V.++ V.singleton pivot V.++ qsort greaterOrEqual
+    | V.null vec = V.empty
+    | otherwise =
+        let pivotIndex = 0
+            (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
+         in qsort less V.++ V.singleton pivot V.++ qsort greaterOrEqual
 
 -- Alternative solution using e Monad Comprehension
 -- qsort :: Ord a => Vector a -> Vector a
@@ -144,17 +146,16 @@ qsort vec
 
 qsortR :: Ord a => Vector a -> Rnd (Vector a)
 qsortR vec
-  | V.null vec = return V.empty
-  | otherwise = do
-      let n = V.length vec
-      pivotIndex <-  getRandomR (0, n - 1)
-      let (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
-      leftSorted  <- qsortR less
-      rightSorted <- qsortR greaterOrEqual
-      return $ leftSorted V.++ V.singleton pivot V.++ rightSorted
-      
+    | V.null vec = return V.empty
+    | otherwise = do
+        let n = V.length vec
+        pivotIndex <- getRandomR (0, n - 1)
+        let (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
+        leftSorted <- qsortR less
+        rightSorted <- qsortR greaterOrEqual
+        return $ leftSorted V.++ V.singleton pivot V.++ rightSorted
 
--- Alternative solution with explicit use of bind 
+-- Alternative solution with explicit use of bind
 -- qsortR :: Ord a => Vector a -> Rnd (Vector a)
 -- qsortR v
 --   | V.null v = return V.empty
@@ -163,24 +164,23 @@ qsortR vec
 --     parts = getRandomR (0, V.length v - 1) >>= return . partitionAt v
 --     mergeSort (b, p, t) = liftM2 (<>) (qsortR b) (fmap (cons p) (qsortR t))
 
-
 -- Exercise 9 -----------------------------------------
 
 -- Selection
 select :: Ord a => Int -> Vector a -> Rnd (Maybe a)
 select i vec
-  | i < 0 || i >= V.length vec = return Nothing
-  | otherwise = do
-      let n = V.length vec
-      pivotIndex <- getRandomR (0, n - 1)
-      let (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
-          lenLess = V.length less
-      case compare i lenLess of
-        LT -> select i less
-        EQ -> return (Just pivot)
-        GT -> select (i - lenLess - 1) greaterOrEqual
+    | i < 0 || i >= V.length vec = return Nothing
+    | otherwise = do
+        let n = V.length vec
+        pivotIndex <- getRandomR (0, n - 1)
+        let (less, pivot, greaterOrEqual) = partitionAt vec pivotIndex
+            lenLess = V.length less
+        case compare i lenLess of
+            LT -> select i less
+            EQ -> return (Just pivot)
+            GT -> select (i - lenLess - 1) greaterOrEqual
 
--- Alternative solution with explicit use of bind 
+-- Alternative solution with explicit use of bind
 -- select :: Ord a => Int -> Vector a -> Rnd (Maybe a)
 -- select i v
 --   | V.null v = return Nothing
@@ -196,17 +196,17 @@ select i vec
 -- Exercise 10 ----------------------------------------
 
 allCards :: Deck
-allCards = [ Card l s | s <- suits, l <- labels ]
+allCards = [Card l s | s <- suits, l <- labels]
 
 newDeck :: Rnd Deck
-newDeck = shuffle allCards 
+newDeck = shuffle allCards
 
 -- Exercise 11 ----------------------------------------
 
 nextCard :: Deck -> Maybe (Card, Deck)
 nextCard d
-  | V.null d = Nothing
-  | otherwise = return (V.head d, V.tail d)
+    | V.null d = Nothing
+    | otherwise = return (V.head d, V.tail d)
 
 -- Exercise 12 ----------------------------------------
 
@@ -215,7 +215,7 @@ getCards n deck = go n ([], deck)
   where
     go :: Int -> ([Card], Deck) -> Maybe ([Card], Deck)
     go 0 ret = return ret
-    go m (crds, d) = nextCard d >>= \(crd, r) -> go (m-1) (crd:crds, r)
+    go m (crds, d) = nextCard d >>= \(crd, r) -> go (m - 1) (crd : crds, r)
 
 -- Exercise 13 ----------------------------------------
 
