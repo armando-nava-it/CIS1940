@@ -1,6 +1,5 @@
 {-# LANGUAGE MonadComprehensions #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# OPTIONS_GHC -Wall #-}
 
 module Week07.HW07
     ( Week07.HW07.liftM
