@@ -34,6 +34,7 @@ library
       Week05.HW05
       Week06.HW06
       Week07.HW07
+      Week08.HW08
       Week05.Parser
       Week07.Cards
   other-modules:
