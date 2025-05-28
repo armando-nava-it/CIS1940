@@ -33,7 +33,9 @@ library
       Week04.HW04
       Week05.HW05
       Week06.HW06
+      Week07.HW07
       Week05.Parser
+      Week07.Cards
   other-modules:
       Paths_CIS1940
   autogen-modules:
@@ -46,6 +48,9 @@ library
       , aeson
       , bytestring
       , containers
+      , vector
+      , MonadRandom
+      , random
   default-language: Haskell2010
 
 executable CIS1940-exe
@@ -73,6 +78,7 @@ test-suite CIS1940-test
       HW04Tests
       HW05Tests
       HW06Tests
+      HW07Tests
   autogen-modules:
       Paths_CIS1940
   hs-source-dirs:
@@ -85,4 +91,7 @@ test-suite CIS1940-test
     , QuickCheck
     , bytestring
     , directory
+    , vector
+    , random
+    , MonadRandom
   default-language: Haskell2010
